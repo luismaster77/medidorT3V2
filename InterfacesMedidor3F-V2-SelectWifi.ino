@@ -145,7 +145,7 @@ void setup() {
             "<div class='col-sm-9 col-md-12 col-lg-5 mx-auto'>"
               "<div class='card border-0 shadow rounded-3 my-5'>"
                 "<div class='card-body p-4 p-sm-5'>"
-                  "<h5 class='card-title text-center mb-5 fw-light fs-5'>CONFIGURACI&Oacute;N</h5>"
+                  "<h5 class='card-title text-center mb-5 fw-light fs-5'>CONFIGURACI&Oacute;N DE RED WIFI</h5>"
                   "<form  action='/connection'>"
                 "<div class='form-floating mb-3'>"
                 "<input name='input1' type='text' class='form-control' id='floatingInput'  placeholder='Nombre red' required='true'>"
@@ -197,30 +197,180 @@ void setup() {
     passwordRedWifi = inputMessage2.c_str();
     
     WiFi.begin(nombreRedWifi, passwordRedWifi);
-    if(WiFi.waitForConnectResult() != WL_CONNECTED) {
-      Serial.println("Conexión fallida");
-      WiFi.softAP(userAdmin, passwordAdmin);
-      int IPLocal = WiFi.softAPIP();
-      String IPRedirect = inet_ntoa(IPLocal);
-      request->send(404, "text/html", "<script>alert ('Error al conectar con red wifi, intente nuevamente');window.location.href='http://"+IPRedirect+"/connection'</script>");
-      Serial.println();
-      Serial.print("IP Address: ");
-      Serial.println(IPLocal);
-      Serial.println("Nombre_red: ");
-      Serial.println(nombreRedWifi);
-      Serial.println("Password_red: ");
-      Serial.println(passwordRedWifi);
-    }else{
-      Serial.println("Conexión exitosa");
+    if(WiFi.waitForConnectResult() == WL_CONNECTED) {
+       Serial.println("Conexión exitosa");
       Serial.print("IP Address: ");
       Serial.println(WiFi.localIP());
       int IPLocal = WiFi.localIP();
       String IPRedirect = inet_ntoa(IPLocal);
-      request->send(200, "text/html", "<script>alert ('Conexion exitosa,el LED debe estar en color verde, verificar por favor');window.location.href='http://"+IPRedirect+"/connection'</script>");
-      Serial.println();
-      Serial.print("IP Address: ");
-      Serial.println(WiFi.localIP());
+      String formulario =                                        //Construcción del formulario HTML de respuesta en cadena de texto
+         "<!DOCTYPE HTML>"
+          "<html>"
+          "<style>"
+              "body {"
+            "background: #0080bb;"
+            "background: linear-gradient(to right, #0080bb, #33AEFF);"
+          "}"
+          "@media (min-width: 1400px)"
+          ".container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl" 
+          "{"
+            "zoom: 0;"
+           "}"
+           "@media (min-width: 768px)"
+          ".container, .container-md, .container-sm" 
+          "{"
+            "zoom: 2;"
+          "}"
+          ".btn-login {"
+            "  font-size: 0.9rem;"
+            " letter-spacing: 0.05rem;"
+            " padding: 0.75rem 1rem;"
+            "}"
+            ".btn-google {"
+              "color: white !important;"
+              " background-color: #ea4335;"
+              "}"
+          ".btn-facebook {"
+            "color: white !important;"
+            "background-color: #0080bb;"
+            "}"
+          ".styleLogo{"
+              "width:25rem;"
+          "}"
+          ".styleLogoTablesa"
+          "{"
+              "max-width: 14%;"
+          "}"
+          ".margin-img"
+          "{"
+              "text-align: end;"
+           "}"
+          
+          "</style>"
+          "<head>"
+                "<link rel='stylesheet' href='style1'/>"
+                "<link rel='stylesheet' href='style2'/>"
+                "<link rel='stylesheet' href='style3'/>"
+                "<title>CONFIGURACI&Oacute;N</title>"
+              "</head>"
+          "<body>"
+            "<div class='container'>"
+              "<div class='row'>"
+                "<div class='col-sm-9 col-md-12 col-lg-5 mx-auto'>"
+                  "<div class='card border-0 shadow rounded-3 my-5'>"
+                    "<div class='card-body p-4 p-sm-5'>"
+                      "<h5 class='card-title text-center mb-5 fw-light fs-5'>CONFIGURACI&Oacute;N DE RED WIFI</h5>"
+                      "<h5 style='text-align:center' class='text-success mt-4'>"; 
+                  String formulario2 = 
+                      "</h5>"
+                      "<div class='col-md-12 mt-4 margin-img'>"
+                      "<small>Powered by </small><img src='logo_tablesa' class='styleLogoTablesa'>"
+                    "</div>"
+                  "</div>"
+                "</div>"
+              "</div>"
+            "</div>"
+          "</div>"
+        "</body>"
+      "</html>";
+   request->send(200, "text/html", formulario+"Conexi&oacute;n exitosa, el LED debe estar en color verde, por favor verifique, ya puede puede cerrar esta ventana."+formulario2); 
     }
+    else{
+     Serial.println("WiFi Connect Failed!");
+     delay(100);
+     String formulario =                                        //Construcción del formulario HTML de respuesta en cadena de texto
+         "<!DOCTYPE HTML>"
+          "<html>"
+          "<style>"
+              "body {"
+            "background: #0080bb;"
+            "background: linear-gradient(to right, #0080bb, #33AEFF);"
+          "}"
+          "@media (min-width: 1400px)"
+          ".container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl" 
+          "{"
+            "zoom: 0;"
+           "}"
+           "@media (min-width: 768px)"
+          ".container, .container-md, .container-sm" 
+          "{"
+            "zoom: 2;"
+          "}"
+          ".btn-login {"
+            "  font-size: 0.9rem;"
+            " letter-spacing: 0.05rem;"
+            " padding: 0.75rem 1rem;"
+            "}"
+            ".btn-google {"
+              "color: white !important;"
+              " background-color: #ea4335;"
+              "}"
+          ".btn-facebook {"
+            "color: white !important;"
+            "background-color: #0080bb;"
+            "}"
+          ".styleLogo{"
+              "width:25rem;"
+          "}"
+          ".styleLogoTablesa"
+          "{"
+              "max-width: 14%;"
+          "}"
+          ".margin-img"
+          "{"
+              "text-align: end;"
+           "}"
+          
+          "</style>"
+          "<head>"
+                "<link rel='stylesheet' href='style1'/>"
+                "<link rel='stylesheet' href='style2'/>"
+                "<link rel='stylesheet' href='style3'/>"
+                "<title>CONFIGURACI&Oacute;N</title>"
+              "</head>"
+          "<body>"
+            "<div class='container'>"
+              "<div class='row'>"
+                "<div class='col-sm-9 col-md-12 col-lg-5 mx-auto'>"
+                  "<div class='card border-0 shadow rounded-3 my-5'>"
+                    "<div class='card-body p-4 p-sm-5'>"
+                      "<h5 class='card-title text-center mb-5 fw-light fs-5'>CONFIGURACI&Oacute;N DE RED WIFI</h5>"
+                      "<form  action='/connection'>"
+                    "<div class='form-floating mb-3'>"
+                    "<input name='input1' type='text' class='form-control' id='floatingInput'  placeholder='Nombre red' required='true'>"
+                    "<label for='floatingInput'>'Escriba el nombre de la red wifi'</label>"
+                  "</div>"
+                  "<div class='form-floating mb-3'>"
+                    "<input name='input2' type='password' class='form-control' id='floatingPassword' placeholder='Password' required='true'>"
+                    "<label for='floatingPassword'>Constrase&ntilde;a</label>"
+                  "</div>" 
+                    "<div>"
+                    "<label for='mac'>"
+                    "<strong>MAC: </strong>"
+                    + WiFi.macAddress() + 
+                    "</label>"
+                    "</div>"
+                  "<div class='d-grid mt-3'>"
+                    "<button class='btn btn-primary btn-login text-uppercase fw-bold' type='submit'>Conectar</button>"
+                  "</div>"
+                "</form>"
+                "<h5 style='text-align:center' class='text-danger mt-4'>"; 
+                String formulario2 = 
+                "</h5>"
+                "<div class='col-md-12 mt-4 margin-img'>"
+                   "<small>Powered by </small><img src='logo_tablesa' class='styleLogoTablesa'>"
+                "</div>"
+              "</div>"
+            "</div>"
+          "</div>"
+        "</div>"
+      "</div>"
+    "</body>"
+    "</html>";
+    inputMessage1 = "";
+    inputMessage2 = "";
+   request->send(404, "text/html", formulario+"Error al conectar con red wifi, intente nuevamente"+formulario2); 
+   }
   });
   server.onNotFound(notFound);
   server.begin();
